@@ -3,14 +3,14 @@ import type { Feature, Polygon } from 'geojson';
 
 export const JEFFERSON_PARK_STATION = {
   lat: 41.9706,
-  lng: -87.7608,
+  lng: -87.7649,
 };
 
 export const BOUNDS = {
-  north: 41.976,
-  south: 41.968,
-  east: -87.765,
-  west: -87.783,
+  north: 41.9814,
+  south: 41.9689,
+  east: -87.7651,
+  west: -87.7797,
 };
 
 export const BOUNDS_POLYGON: Feature<Polygon> = {
