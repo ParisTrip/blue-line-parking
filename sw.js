@@ -1,9 +1,10 @@
 const CACHE_NAME = 'jp-parking-v1';
+const BASE = '/blue-line-parking/';
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/icon.svg',
-  '/manifest.json',
+  BASE,
+  BASE + 'index.html',
+  BASE + 'icon.svg',
+  BASE + 'manifest.json',
 ];
 
 self.addEventListener('install', (event) => {

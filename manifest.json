@@ -2,14 +2,14 @@
   "name": "Jefferson Park Parking",
   "short_name": "JP Parking",
   "description": "Find likely legal, free, all-day street parking near Jefferson Park Blue Line",
-  "start_url": "/",
+  "start_url": "/blue-line-parking/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1a1a2e",
   "background_color": "#1a1a2e",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "/blue-line-parking/icon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }
