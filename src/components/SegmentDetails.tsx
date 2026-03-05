@@ -8,9 +8,10 @@ interface Props {
 }
 
 const COLOR_LABELS: Record<string, string> = {
-  green: 'Likely OK',
-  yellow: 'Risk / Unknown',
-  red: 'Very likely not OK',
+  green: 'No Permit Zone Found',
+  yellow: 'Permit Zone Exists',
+  red: 'Known Restriction',
+  blue: 'No Data - Unmatched Street',
 };
 
 export function SegmentDetails({ segment, onClose, onEdit }: Props) {

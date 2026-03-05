@@ -3,7 +3,7 @@
  *
  * Rules:
  *   - User edits override everything (HIGH confidence)
- *   - Join failure -> YELLOW (conservative default)
+ *   - Join failure (no name match) -> BLUE (no data)
  *   - Permit zone matched -> YELLOW (opportunistic) or RED (strict)
  *   - Street sweeping risk -> YELLOW or RED (strict)
  *   - Snow route -> YELLOW or RED (snow active)
@@ -152,8 +152,8 @@ export function computeAvailability(
     if (!jr || jr.permitMatch === 'unmatched') {
       rules.push({
         type: 'no-match',
-        color: 'yellow',
-        reason: 'No data match, check sign',
+        color: 'blue',
+        reason: 'No data match — street not found in dataset',
       });
     } else if (jr.permitMatch === 'matched') {
       if (settings.treatPermitAsRestricted) {
@@ -218,12 +218,14 @@ export function computeAvailability(
       }
     }
 
-    // Determine final color
+    // Determine final color (priority: red > yellow > blue > green)
     let finalColor: AvailabilityColor = 'green';
     if (rules.some((r) => r.color === 'red')) {
       finalColor = 'red';
     } else if (rules.some((r) => r.color === 'yellow')) {
       finalColor = 'yellow';
+    } else if (rules.some((r) => r.color === 'blue')) {
+      finalColor = 'blue';
     }
 
     // Determine confidence

@@ -12,15 +12,19 @@ export function Legend() {
         <div className="legend__content">
           <div className="legend__item">
             <span className="legend__swatch legend__swatch--green" />
-            <span>Likely OK (verify sign)</span>
+            <span>No permit zone found (verify sign)</span>
           </div>
           <div className="legend__item">
             <span className="legend__swatch legend__swatch--yellow" />
-            <span>Risk / Unknown - check sign</span>
+            <span>Permit zone exists - check sign hours</span>
           </div>
           <div className="legend__item">
             <span className="legend__swatch legend__swatch--red" />
-            <span>Very likely not OK</span>
+            <span>Known restriction</span>
+          </div>
+          <div className="legend__item">
+            <span className="legend__swatch legend__swatch--blue" />
+            <span>No data - street not matched</span>
           </div>
           <div className="legend__item">
             <span className="legend__swatch legend__swatch--boundary" />

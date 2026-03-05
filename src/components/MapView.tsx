@@ -36,6 +36,7 @@ const COLOR_MAP: Record<string, string> = {
   green: '#22c55e',
   yellow: '#eab308',
   red: '#ef4444',
+  blue: '#3b82f6',
 };
 
 export function MapView({
@@ -128,6 +129,7 @@ export function MapView({
             'green', COLOR_MAP.green,
             'yellow', COLOR_MAP.yellow,
             'red', COLOR_MAP.red,
+            'blue', COLOR_MAP.blue,
             '#888888',
           ],
           'line-width': 6,

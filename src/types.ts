@@ -47,7 +47,7 @@ export interface SnowRouteSegment {
 }
 
 export type CurbSide = 'left' | 'right';
-export type AvailabilityColor = 'green' | 'yellow' | 'red';
+export type AvailabilityColor = 'green' | 'yellow' | 'red' | 'blue';
 export type Confidence = 'HIGH' | 'MED' | 'LOW';
 
 export interface CurbSideFeatureProps {
