@@ -23,6 +23,11 @@ const STUB_BANNER = '[STUB DATA] Using offline stub data for this layer.';
 // Streets to exclude (expressways, ramps — can't park on these)
 const EXCLUDED_STREETS = new Set(['KENNEDY EXPY', 'KENNEDY CENTRAL AV XR', 'KENNEDY LAWRENCE AV XR']);
 
+// Streets known to have metered parking in the Jefferson Park area.
+// Chicago's meter data is managed by a private company and is not on the
+// open data portal, so we tag these arterials/collectors explicitly.
+const METERED_STREETS = new Set(['MILWAUKEE', 'FOSTER', 'CENTRAL', 'LAWRENCE']);
+
 /** Socrata resource ID for Street Center Lines */
 const CENTERLINES_RESOURCE = 'pr57-gg9e';
 
@@ -72,6 +77,10 @@ export async function fetchCenterlines(): Promise<CenterlineCollection> {
         continue;
       }
 
+      // Tag known metered streets (arterials/collectors class 2-3)
+      const streetClass = String(row.class ?? '');
+      const isMetered = METERED_STREETS.has(streetNam) && (streetClass === '2' || streetClass === '3');
+
       features.push({
         type: 'Feature',
         properties: {
@@ -83,6 +92,7 @@ export async function fetchCenterlines(): Promise<CenterlineCollection> {
           L_T_ADD: parseInt(String(row.l_t_add ?? '0'), 10),
           R_F_ADD: parseInt(String(row.r_f_add ?? '0'), 10),
           R_T_ADD: parseInt(String(row.r_t_add ?? '0'), 10),
+          ...(isMetered ? { known_restriction: 'metered' as const } : {}),
         },
         geometry: {
           type: 'LineString',

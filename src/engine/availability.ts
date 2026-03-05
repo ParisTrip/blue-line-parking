@@ -174,10 +174,13 @@ export function computeAvailability(
 
     // Known hard restriction from centerline data
     if (cl?.properties.known_restriction) {
+      const restriction = cl.properties.known_restriction;
       rules.push({
         type: 'known-restriction',
         color: 'red',
-        reason: `Posted ${cl.properties.known_restriction.replace('-', ' ')}`,
+        reason: restriction === 'metered'
+          ? 'Metered parking — paid only'
+          : `Posted ${restriction.replace('-', ' ')}`,
       });
     }
 
