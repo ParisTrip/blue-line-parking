@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import type { CurbSideCollection, CurbSideFeatureProps, LayerVisibility, ParkedHere } from '../types';
 import { JEFFERSON_PARK_STATION, BOUNDS, BOUNDS_POLYGON, DEFAULT_ZOOM, LONG_PRESS_MS } from '../config';
@@ -52,6 +52,7 @@ export function MapView({
   const longPressTimer = useRef<number | null>(null);
   const wasLongPress = useRef(false);
   const geolocateRef = useRef<maplibregl.GeolocateControl | null>(null);
+  const [mapReady, setMapReady] = useState(false);
 
   // Initialize map
   useEffect(() => {
@@ -254,6 +255,8 @@ export function MapView({
 
       // Auto-trigger geolocation
       geolocate.trigger();
+
+      setMapReady(true);
     });
 
     mapRef.current = map;
@@ -264,14 +267,13 @@ export function MapView({
     };
   }, []);
 
-  // Update curb sides data
+  // Update curb sides data (must wait for map load to create the source)
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !curbSides) return;
+    if (!map || !curbSides || !mapReady) return;
 
     const source = map.getSource('curb-sides') as maplibregl.GeoJSONSource | undefined;
     if (source) {
-      // MapLibre needs plain objects; stringify reasons array for properties
       const data = {
         ...curbSides,
         features: curbSides.features.map((f) => ({
@@ -282,25 +284,26 @@ export function MapView({
           },
         })),
       };
+      console.log(`[MAP] Rendering ${data.features.length} curb side segments`);
       source.setData(data as any);
     }
-  }, [curbSides]);
+  }, [curbSides, mapReady]);
 
   // Update snow route data
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !snowRouteGeoJSON) return;
+    if (!map || !snowRouteGeoJSON || !mapReady) return;
 
     const source = map.getSource('snow-routes') as maplibregl.GeoJSONSource | undefined;
     if (source) {
       source.setData(snowRouteGeoJSON);
     }
-  }, [snowRouteGeoJSON]);
+  }, [snowRouteGeoJSON, mapReady]);
 
   // Update layer visibility
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map || !mapReady) return;
 
     const setVis = (id: string, visible: boolean) => {
       if (map.getLayer(id)) {
@@ -313,7 +316,7 @@ export function MapView({
     setVis('curb-sides-sweeping', layers.sweeping);
     setVis('snow-routes-line', layers.snowRoutes);
     setVis('curb-sides-edits', layers.myEdits);
-  }, [layers]);
+  }, [layers, mapReady]);
 
   // Parked here marker
   useEffect(() => {
