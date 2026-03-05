@@ -1,6 +1,6 @@
 /**
- * Data fetcher — live Chicago Data Portal API for centerlines,
- * stub data for permit zones / sweeping / snow routes.
+ * Data fetcher — live Chicago Data Portal API for centerlines and
+ * permit zones; stub data for sweeping / snow routes.
  */
 
 import type {
@@ -23,8 +23,11 @@ const STUB_BANNER = '[STUB DATA] Using offline stub data for this layer.';
 // Streets to exclude (expressways, ramps — can't park on these)
 const EXCLUDED_STREETS = new Set(['KENNEDY EXPY', 'KENNEDY CENTRAL AV XR', 'KENNEDY LAWRENCE AV XR']);
 
-/** Socrata resource ID for Street Center Lines (the underlying data table) */
+/** Socrata resource ID for Street Center Lines */
 const CENTERLINES_RESOURCE = 'pr57-gg9e';
+
+/** Socrata resource ID for Parking Permit Zones */
+const PERMIT_ZONES_RESOURCE = 'u9xt-hiju';
 
 export async function fetchCenterlines(): Promise<CenterlineCollection> {
   try {
@@ -99,9 +102,50 @@ export async function fetchCenterlines(): Promise<CenterlineCollection> {
   }
 }
 
+/** Map API odd_even values (O/E/B) to our normalized form */
+function normalizeOddEven(val: string): 'ODD' | 'EVEN' | 'BOTH' {
+  switch (val?.toUpperCase()) {
+    case 'O': return 'ODD';
+    case 'E': return 'EVEN';
+    case 'B': return 'BOTH';
+    default: return 'BOTH';
+  }
+}
+
 export async function fetchPermitZones(): Promise<PermitZoneRecord[]> {
-  console.warn(STUB_BANNER);
-  return stubPermitZones;
+  try {
+    // Fetch all active permit zones in ward 45 (Jefferson Park) with address
+    // ranges that overlap our bounding box area (roughly 5000–5700 W)
+    const where = `status='ACTIVE' AND ward_low=45 AND address_range_low>=5000 AND address_range_low<=5700`;
+    const url = `https://data.cityofchicago.org/resource/${PERMIT_ZONES_RESOURCE}.json?$limit=500&$where=${encodeURIComponent(where)}`;
+
+    console.log('[DATA] Fetching permit zones from Chicago Data Portal…');
+    console.log('[DATA] URL:', url);
+    const resp = await fetch(url);
+    if (!resp.ok) {
+      const body = await resp.text().catch(() => '');
+      throw new Error(`HTTP ${resp.status}: ${body}`);
+    }
+    const rows: Record<string, unknown>[] = await resp.json();
+    console.log(`[DATA] Received ${rows.length} permit zone records`);
+
+    const records: PermitZoneRecord[] = rows.map((row) => ({
+      zone: String(row.zone ?? ''),
+      street_direction: String(row.street_direction ?? ''),
+      street_name: String(row.street_name ?? ''),
+      street_type: String(row.street_type ?? ''),
+      from_address: parseInt(String(row.address_range_low ?? '0'), 10),
+      to_address: parseInt(String(row.address_range_high ?? '0'), 10),
+      odd_even: normalizeOddEven(String(row.odd_even ?? '')),
+      ward: String(row.ward_low ?? ''),
+    }));
+
+    return records;
+  } catch (err) {
+    console.error('[DATA] Failed to fetch permit zones, falling back to stub data.');
+    console.error('[DATA] Error details:', err instanceof Error ? err.message : err);
+    return stubPermitZones;
+  }
 }
 
 export async function fetchSweepingData(): Promise<SweepingWardSection[]> {

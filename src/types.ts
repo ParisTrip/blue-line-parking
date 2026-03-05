@@ -16,14 +16,14 @@ export type CenterlineFeature = Feature<LineString, CenterlineProperties>;
 export type CenterlineCollection = FeatureCollection<LineString, CenterlineProperties>;
 
 export interface PermitZoneRecord {
-  ward_section: string;
+  zone: string;
   street_direction: string;
   street_name: string;
   street_type: string;
   from_address: number;
   to_address: number;
   odd_even: 'ODD' | 'EVEN' | 'BOTH';
-  zone: string;
+  ward: string;
 }
 
 export interface SweepingWardSection {

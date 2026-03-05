@@ -150,47 +150,26 @@ export const stubCenterlines: CenterlineCollection = {
 // Streets not listed here will fail the join → YELLOW (conservative default).
 
 export const stubPermitZones: PermitZoneRecord[] = [
-  // Carmen Ave — permit on 5400+ block, no permit on 5200-5399
+  // Fallback stubs — only used if live API fails
   {
-    ward_section: '45-1',
+    zone: '101',
     street_direction: 'W',
     street_name: 'CARMEN',
     street_type: 'AVE',
-    from_address: 5400,
-    to_address: 5599,
-    odd_even: 'BOTH',
-    zone: '383',
+    from_address: 5300,
+    to_address: 5358,
+    odd_even: 'EVEN',
+    ward: '45',
   },
   {
-    ward_section: '45-1',
+    zone: '101',
     street_direction: 'W',
     street_name: 'CARMEN',
     street_type: 'AVE',
-    from_address: 5200,
-    to_address: 5399,
+    from_address: 5301,
+    to_address: 5357,
     odd_even: 'ODD',
-    zone: '383',
-  },
-  // Winona St — permit on 5400+ block
-  {
-    ward_section: '45-1',
-    street_direction: 'W',
-    street_name: 'WINONA',
-    street_type: 'ST',
-    from_address: 5400,
-    to_address: 5599,
-    odd_even: 'BOTH',
-    zone: '383',
-  },
-  {
-    ward_section: '45-1',
-    street_direction: 'W',
-    street_name: 'WINONA',
-    street_type: 'ST',
-    from_address: 5200,
-    to_address: 5399,
-    odd_even: 'ODD',
-    zone: '383',
+    ward: '45',
   },
 ];
 

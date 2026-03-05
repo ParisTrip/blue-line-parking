@@ -8,7 +8,7 @@ export const JEFFERSON_PARK_STATION = {
 
 export const BOUNDS = {
   north: 41.9757,  // W Foster Ave
-  south: 41.9679,  // W Lawrence Ave
+  south: 41.9689,  // W Lawrence Ave
   east: -87.7555,  // N Leclaire Ave (5100 W)
   west: -87.7686,  // N Central Ave (5600 W)
 };
