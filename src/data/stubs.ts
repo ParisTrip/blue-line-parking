@@ -145,42 +145,50 @@ export const stubCenterlines: CenterlineCollection = {
   ],
 };
 
-// ---- Parking Permit Zones ----
-// Carmen 5400-5449 has a permit zone (makes segment 2 YELLOW).
-// Carmen 5600-5699 has a record with no overlap (lets segment 1 be "no-permit" GREEN).
-// Winona 5600-5699 has a record with no overlap (lets segment 3 be "no-permit" GREEN).
-// No record for LONG — join fails → YELLOW.
+// ---- Parking Permit Zones (STUB) ----
+// Covers a sample of real streets in the bounding box.
+// Streets not listed here will fail the join → YELLOW (conservative default).
 
 export const stubPermitZones: PermitZoneRecord[] = [
+  // Carmen Ave — permit on 5400+ block, no permit on 5200-5399
   {
     ward_section: '45-1',
     street_direction: 'W',
     street_name: 'CARMEN',
     street_type: 'AVE',
     from_address: 5400,
-    to_address: 5449,
+    to_address: 5599,
     odd_even: 'BOTH',
     zone: '383',
   },
   {
-    // Non-overlapping range so Carmen 5300-5399 resolves as "no-permit" (GREEN)
     ward_section: '45-1',
     street_direction: 'W',
     street_name: 'CARMEN',
     street_type: 'AVE',
-    from_address: 5600,
-    to_address: 5699,
+    from_address: 5200,
+    to_address: 5399,
     odd_even: 'ODD',
     zone: '383',
   },
+  // Winona St — permit on 5400+ block
   {
-    // Non-overlapping range so Winona 5300-5399 resolves as "no-permit" (GREEN)
     ward_section: '45-1',
     street_direction: 'W',
     street_name: 'WINONA',
     street_type: 'ST',
-    from_address: 5600,
-    to_address: 5699,
+    from_address: 5400,
+    to_address: 5599,
+    odd_even: 'BOTH',
+    zone: '383',
+  },
+  {
+    ward_section: '45-1',
+    street_direction: 'W',
+    street_name: 'WINONA',
+    street_type: 'ST',
+    from_address: 5200,
+    to_address: 5399,
     odd_even: 'ODD',
     zone: '383',
   },
