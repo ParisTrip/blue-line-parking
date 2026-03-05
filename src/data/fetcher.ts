@@ -31,9 +31,13 @@ export async function fetchCenterlines(): Promise<CenterlineCollection> {
     const where = `within_box(the_geom,${BOUNDS.south},${BOUNDS.west},${BOUNDS.north},${BOUNDS.east})`;
     const url = `https://data.cityofchicago.org/resource/${CENTERLINES_RESOURCE}.json?$limit=500&$where=${encodeURIComponent(where)}`;
 
-    console.log('[DATA] Fetching centerlines from Chicago Data Portal...');
+    console.log('[DATA] Fetching centerlines from Chicago Data Portal…');
+    console.log('[DATA] URL:', url);
     const resp = await fetch(url);
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    if (!resp.ok) {
+      const body = await resp.text().catch(() => '');
+      throw new Error(`HTTP ${resp.status}: ${body}`);
+    }
     const rows: Record<string, unknown>[] = await resp.json();
     console.log(`[DATA] Received ${rows.length} centerline records`);
 
@@ -88,7 +92,9 @@ export async function fetchCenterlines(): Promise<CenterlineCollection> {
 
     return { type: 'FeatureCollection', features };
   } catch (err) {
-    console.error('[DATA] Failed to fetch centerlines, falling back to stub data:', err);
+    console.error('[DATA] Failed to fetch centerlines, falling back to stub data.');
+    console.error('[DATA] Error details:', err instanceof Error ? err.message : err);
+    console.error('[DATA] This may be a CORS or network issue. Full error:', err);
     return stubCenterlines;
   }
 }
