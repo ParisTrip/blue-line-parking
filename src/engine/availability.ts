@@ -172,6 +172,15 @@ export function computeAvailability(
     }
     // no-permit: no rule added (potential GREEN)
 
+    // Known hard restriction from centerline data
+    if (cl?.properties.known_restriction) {
+      rules.push({
+        type: 'known-restriction',
+        color: 'red',
+        reason: `Posted ${cl.properties.known_restriction.replace('-', ' ')}`,
+      });
+    }
+
     // Sweeping
     const midCoords = getMidpointCoords(cs.geometry);
     const sweeping = isSweepingRisk(midCoords, sweepingSections, now);

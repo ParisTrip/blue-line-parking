@@ -129,7 +129,7 @@ export function MapView({
             'red', COLOR_MAP.red,
             '#888888',
           ],
-          'line-width': 5,
+          'line-width': 6,
           'line-opacity': 0.85,
         },
         layout: {

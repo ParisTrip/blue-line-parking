@@ -9,6 +9,7 @@ export interface CenterlineProperties {
   L_T_ADD: number;
   R_F_ADD: number;
   R_T_ADD: number;
+  known_restriction?: 'no-parking' | 'no-standing' | 'metered';
 }
 
 export type CenterlineFeature = Feature<LineString, CenterlineProperties>;
